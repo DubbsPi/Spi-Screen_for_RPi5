@@ -18,8 +18,10 @@ else
     echo "dtoverlay line already exists. No reboot needed."
 fi
 
-sudo apt install grim ffmpeg
+# Install required program
+sudo apt install grim
+
 # Run the specified command constantly after checking/configuring config.txt
 while true; do
-    grim -l 0 -t ppm - | ffmpeg -loglevel quiet -hide_banner -i - -vf 'scale=480:320,format=rgb565le' -f fbdev /dev/fb1
+    grim -l 0 -t ppm - | ffmpeg -f image2pipe -vcodec ppm -r 60 -loglevel quiet -hide_banner -i -     -vf 'scale=480:320,format=rgb565le' -pix_fmt rgb565le -f rawvideo - | cat > /dev/fb1
 done
